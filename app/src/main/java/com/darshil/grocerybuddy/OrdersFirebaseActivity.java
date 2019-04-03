@@ -21,7 +21,7 @@ import com.squareup.picasso.Picasso;
 
 public class OrdersFirebaseActivity extends AppCompatActivity {
     private DatabaseReference ProductRef;
-    RecyclerView recyclerView;
+    private RecyclerView recyclerView;
     RecyclerView.LayoutManager layoutManager;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
