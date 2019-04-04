@@ -81,7 +81,6 @@ public class PaymentActivity extends AppCompatActivity {
         }
 
     }
-//jaja
     private void VlidateCardDetails(final String cardNum, final String cvvNum, final String cardExp) {
         final DatabaseReference RootRef;
         RootRef = FirebaseDatabase.getInstance().getReference();

@@ -63,6 +63,8 @@ GoogleMap.OnMarkerDragListener{
     int PROXIMITY_RADIUS=10000;
     double latitude,longitude;
     double end_latitude,end_logitude;
+    double long_end_latitude,long_end_logitude;
+    private String checker;
     boolean doubleBackToExitPressedOnce = false;
     Address userAddress;
     FusedLocationProviderClient fusedLocationProviderClient;
@@ -84,48 +86,52 @@ GoogleMap.OnMarkerDragListener{
         btnTo.setOnClickListener( new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mMap.clear();
-                Intent io = getIntent();
-                String getAdd = io.getStringExtra( "PostalCode" );
-                List<Address> addressList = null;
-                MarkerOptions userMarkerOptions = new MarkerOptions();
-                if(!TextUtils.isEmpty( getAdd ))
-                {
-                    Geocoder geocoder = new Geocoder( MapsActivity.this );
-                    try {
-                        addressList = geocoder.getFromLocationName( getAdd,1 );
-                        if(addressList != null)
-                        {
+                checker = "clicked";
+                if (checker.equals( "clicked" )) {
+
+                    mMap.clear();
+                    Intent io = getIntent();
+                    String getAdd = io.getStringExtra( "PostalCode" );
+                    List<Address> addressList = null;
+                    MarkerOptions userMarkerOptions = new MarkerOptions();
+                    if (!TextUtils.isEmpty( getAdd )) {
+                        Geocoder geocoder = new Geocoder( MapsActivity.this );
+                        try {
+                            addressList = geocoder.getFromLocationName( getAdd, 1 );
+                            if (addressList != null) {
                                 userAddress = addressList.get( 0 );
-                                LatLng latLng = new LatLng( userAddress.getLatitude(),userAddress.getLongitude() );
+                                LatLng latLng = new LatLng( userAddress.getLatitude(), userAddress.getLongitude() );
+                                long_end_latitude = userAddress.getLatitude();
+                                long_end_logitude = userAddress.getLongitude();
                                 userMarkerOptions.position( latLng );
                                 userMarkerOptions.title( getAdd );
-                                userMarkerOptions.icon( BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED) );
-                                mMap.addMarker( userMarkerOptions);
-                                mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng) );
+                                userMarkerOptions.icon( BitmapDescriptorFactory.defaultMarker( BitmapDescriptorFactory.HUE_RED ) );
+                                mMap.addMarker( userMarkerOptions );
+                                mMap.moveCamera( CameraUpdateFactory.newLatLng( latLng ) );
                                 mMap.animateCamera( CameraUpdateFactory.zoomTo( 14 ) );
-                             btnTo.setOnLongClickListener( new View.OnLongClickListener() {
-                                 @Override
-                                 public boolean onLongClick(View v) {
-                                     String groceryStore = "grocery_or_supermarket";
-                                     String url = getUrl(userAddress.getLatitude(),userAddress.getLongitude(),groceryStore);
-                                     Object dataTransfer[] = new Object[2];
-                                     dataTransfer[0] = mMap;
-                                     dataTransfer[1] = url;
-                                     GetNearbyPlacesData getNearbyPlacesData = new GetNearbyPlacesData();
-                                     getNearbyPlacesData.execute( dataTransfer );
-                                     Toast.makeText( MapsActivity.this, "Showing Nearby Grocery Stores From Postal Code!!", Toast.LENGTH_LONG).show();
-                                     return false;
-                                 }
-                             } );
+                                btnTo.setOnLongClickListener( new View.OnLongClickListener() {
+                                    @Override
+                                    public boolean onLongClick(View v) {
+                                        String groceryStore = "grocery_or_supermarket";
+                                        String url = getUrl( userAddress.getLatitude(), userAddress.getLongitude(), groceryStore );
+                                        Object dataTransfer[] = new Object[2];
+                                        dataTransfer[0] = mMap;
+                                        dataTransfer[1] = url;
+                                        GetNearbyPlacesData getNearbyPlacesData = new GetNearbyPlacesData();
+                                        getNearbyPlacesData.execute( dataTransfer );
+                                        Toast.makeText( MapsActivity.this, "Showing Nearby Grocery Stores From Postal Code!!", Toast.LENGTH_LONG ).show();
+                                        return false;
+                                    }
+                                } );
 
+                            }
+                        } catch (IOException e) {
+                            e.printStackTrace();
                         }
-                    } catch (IOException e) {
-                        e.printStackTrace();
+
                     }
 
                 }
-
             }
         } );
         btnGet = (Button) findViewById(R.id.btnNearStore);
@@ -286,7 +292,8 @@ GoogleMap.OnMarkerDragListener{
         String title = marker.getTitle();
         String lat = String.valueOf( end_latitude );
         String lng = String.valueOf( end_logitude );
-
+        String Llat = String.valueOf( long_end_latitude );
+        String lLang = String.valueOf( long_end_logitude );
         //  markerOptions.snippet( "Distance = "+results[0] );
         Toast.makeText( MapsActivity.this, "Distance = "+results[0], Toast.LENGTH_SHORT ).show();
         Intent io = new Intent(  MapsActivity.this,OrderActivity.class);
@@ -294,6 +301,8 @@ GoogleMap.OnMarkerDragListener{
         io.putExtra( "Destination",title );
         io.putExtra( "Latitude",lat );
         io.putExtra( "Longitude",lng);
+        io.putExtra( "LongLatitude",Llat );
+        io.putExtra( "LongLongitude",lLang );
         startActivity( io );
         return false;
     }

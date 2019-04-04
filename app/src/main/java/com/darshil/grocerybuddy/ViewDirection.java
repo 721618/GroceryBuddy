@@ -76,7 +76,7 @@ public class ViewDirection extends FragmentActivity implements OnMapReadyCallbac
                 .findFragmentById( R.id.map );
         mapFragment.getMapAsync( this );
         Lat = getIntent().getStringExtra( "Latitude" );
-        lang = getIntent().getStringExtra( "Longitude" );
+        lang = getIntent().getStringExtra( "Londgitude" );
         title = getIntent().getStringExtra( "Destination" );
         dest_lat = Double.parseDouble( Lat );
         dest_lng = Double.parseDouble( lang );
@@ -107,7 +107,6 @@ public class ViewDirection extends FragmentActivity implements OnMapReadyCallbac
             LocationServices.FusedLocationApi.removeLocationUpdates( client,this );
         }
         // Create Marker For Destination
-        LatLng destinationLatLng = new LatLng( dest_lat,dest_lng );
         place2 = new MarkerOptions()
                 .position( new LatLng( dest_lat,dest_lng ) )
                 .title( title )

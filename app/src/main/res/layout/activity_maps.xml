@@ -42,7 +42,7 @@
                 android:layout_below="@+id/btnNearStore"
                 android:layout_alignParentStart="true"
                 android:layout_marginStart="0dp"
-                android:textSize="20sp"
+                android:textSize="15sp"
                 android:layout_marginTop="15dp"
                 android:background="@drawable/btn_rectangle_pink"
                 android:text="Find From Another Location(With PostalCode)"
